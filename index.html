@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor Pemulax - Retro Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #F5E6D3;
+            --dark-blue: #1a237e;
+            --light-blue: #3f51b5;
+            --accent-blue: #5c6bc0;
+            --text-dark: #2c3e50;
+            --shadow: rgba(26, 35, 126, 0.3);
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background-color: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Pixel Art Background */
+        .bg-pixel-art {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://i.imgur.com/3QJcZtC.gif'); /* Example pixel art city gif */
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1; /* Subtle so it doesn't obstruct content */
+            z-index: -2;
+            animation: slowPan 60s linear infinite alternate;
+        }
+        
+        @keyframes slowPan {
+            from { background-position: 0% 50%; }
+            to { background-position: 100% 50%; }
+        }
+
+
+        /* Animated Background Pattern Overlay */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(63, 81, 181, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(92, 107, 192, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(26, 35, 126, 0.1) 0%, transparent 50%);
+            animation: float 15s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--light-blue) 100%);
+            color: var(--cream);
+            padding: 3rem 0; /* Increased padding */
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 5px solid var(--accent-blue);
+        }
+
+        .header-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(245,230,211,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            animation: gridMove 10s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(10px); }
+        }
+
+        .brand-name {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 3rem;
+            text-shadow: 3px 3px 0 var(--accent-blue);
+            margin-bottom: 1rem;
+            animation: glow 2s ease-in-out infinite alternate;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 3px 3px 0 var(--accent-blue), 0 0 10px #ffddaa; }
+            to { text-shadow: 3px 3px 0 var(--accent-blue), 0 0 25px #ffddaa, 0 0 40px var(--accent-blue); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(245, 230, 211, 0.9); /* Slightly transparent */
+            backdrop-filter: blur(5px);
+            padding: 1rem 0;
+            box-shadow: 0 4px 15px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            padding: 0 1rem;
+        }
+
+        .nav-link {
+            background: var(--dark-blue);
+            color: var(--cream);
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--accent-blue);
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-link:hover::before {
+            left: 100%;
+        }
+
+        .nav-link:hover {
+            background: var(--light-blue);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 2rem; /* Increased padding */
+            margin: 4rem 0; /* Increased margin */
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--dark-blue), var(--light-blue), var(--accent-blue));
+        }
+
+        .section-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 4rem; /* Increased margin */
+            color: var(--dark-blue);
+            text-shadow: 2px 2px 0 rgba(245, 230, 211, 0.7);
+            animation: slideInDown 0.8s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 4rem; /* Increased gap */
+            align-items: center;
+        }
+
+        .profile-image {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--dark-blue), var(--light-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            animation: rotateGlow 4s ease-in-out infinite;
+            border: 5px solid var(--cream);
+            box-shadow: 0 0 15px 5px var(--shadow);
+        }
+
+        @keyframes rotateGlow {
+            0%, 100% { box-shadow: 0 0 30px var(--accent-blue); transform: rotate(0deg); }
+            50% { box-shadow: 0 0 50px var(--light-blue); transform: rotate(10deg); }
+        }
+
+        .profile-image::before {
+            content: '👨‍💻';
+            font-size: 5rem; /* Increased size */
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-8px); }
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            animation: fadeInRight 1s ease-out;
+        }
+        .about-text p {
+            margin-bottom: 1.5rem; /* Added spacing between paragraphs */
+        }
+        .about-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        @keyframes fadeInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Portfolio Grid */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Increased min-width */
+            gap: 2.5rem; /* Increased gap */
+            margin-top: 2rem;
+        }
+
+        .portfolio-card {
+            background: var(--cream);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 3px solid var(--dark-blue);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .portfolio-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(92, 107, 192, 0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+
+        .portfolio-card:hover::before {
+            opacity: 1;
+            animation: scan 1.2s ease-in-out;
+        }
+
+        @keyframes scan {
+            0% { transform: rotate(45deg) translateX(-100%); }
+            100% { transform: rotate(45deg) translateX(100%); }
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 40px var(--shadow);
+            border-color: var(--accent-blue);
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); text-shadow: 0 0 5px rgba(0,0,0,0.2); }
+            50% { transform: scale(1.1); text-shadow: 0 0 15px rgba(0,0,0,0.4); }
+        }
+
+        .card-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--dark-blue);
+        }
+
+        .card-description {
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            min-height: 80px; /* Ensure cards have similar height */
+        }
+
+        .card-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-tag {
+            background: var(--dark-blue);
+            color: var(--cream);
+            padding: 0.4rem 0.9rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* Contact Section */
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .contact-form {
+            background: var(--cream);
+            padding: 2.5rem;
+            border-radius: 15px;
+            border: 3px solid var(--dark-blue);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: var(--dark-blue);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--accent-blue);
+            border-radius: 8px;
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fff;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--dark-blue);
+            box-shadow: 0 0 10px var(--shadow);
+            transform: scale(1.02);
+        }
+
+        .form-textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--dark-blue), var(--light-blue));
+            color: var(--cream);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--cream);
+            border-radius: 15px;
+            border: 3px solid var(--dark-blue);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .contact-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px var(--shadow);
+            border-color: var(--accent-blue);
+        }
+
+        .contact-icon {
+            font-size: 2.5rem;
+            color: var(--dark-blue);
+        }
+
+        .contact-text {
+            flex: 1;
+        }
+
+        .contact-label {
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 0.3rem;
+        }
+
+        .contact-value {
+            color: var(--text-dark);
+            word-break: break-all;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-blue);
+            color: var(--cream);
+            text-align: center;
+            padding: 3rem 0; /* Increased padding */
+            margin-top: 4rem;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .about-content,
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            .about-text {
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .brand-name {
+                font-size: 2.2rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .nav-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            .container {
+                padding: 0 1rem;
+            }
+            section {
+                padding: 4rem 1.5rem;
+                margin: 2rem 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+             .brand-name {
+                font-size: 1.8rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .nav-link {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--cream);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--dark-blue), var(--light-blue));
+            border-radius: 6px;
+            border: 2px solid var(--cream);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--light-blue), var(--accent-blue));
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pixel-art"></div>
+    <div class="bg-pattern"></div>
+    
+    <header>
+        <div class="header-bg"></div>
+        <div class="container">
+            <h1 class="brand-name">Muhammad Arif Murdiansyah</h1>
+            <p class="subtitle">Creative Content Creator </p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-container">
+            <a href="#about" class="nav-link">About Me</a>
+            <a href="#portfolio" class="nav-link">Portfolio</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section id="about">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="profile-image"></div>
+                <div class="about-text">
+                    <p>Selamat datang di dunia kreatif saya! Saya adalah seorang editor konten yang bisa dibilang pemula dengan passion pembuatan konten yang engaging.</p>
+                    <p>Keahlian saya mencakup editing video, copywriting, content strategy, dan digital marketing. Saya percaya bahwa setiap brand memiliki cerita unik yang layak untuk diceritakan dengan cara yang menarik dan autentik.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolio">
+            <h2 class="section-title">Portfolio</h2>
+            <div class="portfolio-grid">
+                <!-- Card 1 -->
+                <div class="portfolio-card">
+                    <div class="card-icon">🎬</div>
+                    <h3 class="card-title">Video Editing</h3>
+                    <p class="card-description">Editing video profesional untuk berbagai keperluan mulai dari content marketing, corporate video, hingga social media content.</p>
+                    <div class="card-tech">
+                        <span class="tech-tag">Adobe Premiere</span>
+                        <span class="tech-tag">Capcut Pro</span>
+                        <span class="tech-tag">DaVinci Resolve</span>
+                    </div>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="portfolio-card">
+                    <div class="card-icon">✍️</div>
+                    <h3 class="card-title">Copywriting</h3>
+                    <p class="card-description">Menulis copy yang persuasif dan engaging untuk berbagai platform digital, email marketing, dan campaign advertising.</p>
+                    <div class="card-tech">
+                        <span class="tech-tag">SEO Writing</span>
+                        <span class="tech-tag">Email Marketing</span>
+                        <span class="tech-tag">Social Media</span>
+                    </div>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="portfolio-card">
+                    <div class="card-icon">📱</div>
+                    <h3 class="card-title">Content Strategy</h3>
+                    <p class="card-description">Merancang strategi konten yang comprehensive untuk meningkatkan engagement dan brand awareness di platform digital.</p>
+                    <div class="card-tech">
+                        <span class="tech-tag">Analytics</span>
+                        <span class="tech-tag">Planning</span>
+                        <span class="tech-tag">Optimization</span>
+                    </div>
+                </div>
+                
+                <!-- Card 4 -->
+                <div class="portfolio-card">
+                    <div class="card-icon">🎨</div>
+                    <h3 class="card-title">Creative Design</h3>
+                    <p class="card-description">Desain visual yang menarik untuk mendukung konten, termasuk thumbnail, infografis, dan social media assets.</p>
+                    <div class="card-tech">
+                        
+                        <span class="tech-tag">Illustrator</span>
+                        <span class="tech-tag">Canva</span>
+                    </div>
+                </div>
+                
+                <!-- Card 5 -->
+                <div class="portfolio-card">
+                    <div class="card-icon">📊</div>
+                    <h3 class="card-title">Digital Marketing</h3>
+                    <p class="card-description">Campaign digital marketing yang efektif dengan focus pada ROI dan engagement metrics yang terukur.</p>
+                    <div class="card-tech">
+                        <span class="tech-tag">Tiktok Ads</span>
+                        <span class="tech-tag">Google Analytics</span>
+                    </div>
+                </div>
+                
+                <!-- Card 6 -->
+                
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2 class="section-title">Contact Me</h2>
+            <div class="contact-content">
+                <form class="contact-form" onsubmit="handleFormSubmit(event)">
+                    <div class="form-group">
+                        <label class="form-label">Nama</label>
+                        <input type="text" class="form-input" placeholder="Nama Anda" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" placeholder="email@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Subjek</label>
+                        <input type="text" class="form-input" placeholder="Subjek pesan" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Pesan</label>
+                        <textarea class="form-input form-textarea" placeholder="Ceritakan tentang project Anda..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Kirim Pesan</button>
+                </form>
+                
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div class="contact-text">
+                            <div class="contact-label">Email</div>
+                            <div class="contact-value">kuronoru2@gmail.com</div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">📱</div>
+                        <div class="contact-text">
+                            <div class="contact-label">WhatsApp</div>
+                            <div class="contact-value">+62 851-7689-4439</div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-text">
+                            <div class="contact-label">Lokasi</div>
+                            <div class="contact-value">Jakarta, Indonesia</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p class="footer-text">&copy; 2025 Editor Pemulax. Semua hak dilindungi undang-undang.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    const offsetTop = targetElement.offsetTop - 80;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Form submission handler
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const submitBtn = form.querySelector('.submit-btn');
+            const inputs = form.querySelectorAll('.form-input');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.style.borderColor = '#e74c3c';
+                    isValid = false;
+                } else {
+                    input.style.borderColor = '#5c6bc0';
+                }
+            });
+            
+            if (isValid) {
+                const originalText = submitBtn.textContent;
+                
+                submitBtn.textContent = 'Mengirim...';
+                submitBtn.disabled = true;
+                
+                setTimeout(() => {
+                    submitBtn.textContent = 'Pesan Terkirim!';
+                    submitBtn.style.background = '#27ae60';
+                    
+                    setTimeout(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = '';
+                        form.reset();
+                        inputs.forEach(input => input.style.borderColor = '#5c6bc0');
+                    }, 2500);
+                }, 1500);
+            }
+        }
+
+        // Scroll animations
+        const sections = document.querySelectorAll('section');
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    // observer.unobserve(entry.target); // Optional: stop observing after animation
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(50px)';
+            section.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+            observer.observe(section);
+        });
+
+        // Typing effect for subtitle
+        const subtitle = document.querySelector('.subtitle');
+        const text = subtitle.textContent;
+        subtitle.textContent = '';
+        
+        let i = 0;
+        function typeWriter() {
+            if (i < text.length) {
+                subtitle.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+        
+        setTimeout(typeWriter, 1000);
+
+        // Parallax effect for the dot pattern
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const bgPattern = document.querySelector('.bg-pattern');
+            bgPattern.style.transform = `translateY(${scrolled * 0.2}px)`;
+        });
+
+        // Interactive contact items
+        document.querySelectorAll('.contact-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const contactValue = this.querySelector('.contact-value').textContent.trim();
+                
+                if (contactValue.includes('@')) {
+                    window.location.href = `mailto:${contactValue}`;
+                } else if (contactValue.includes('+62')) {
+                    window.open(`https://wa.me/${contactValue.replace(/\D/g, '')}`, '_blank');
+                }
+            });
+        });
+
+        // Add click animation to buttons
+        document.querySelectorAll('.nav-link, .submit-btn').forEach(btn => {
+            btn.addEventListener('mousedown', function() {
+                this.style.transform = 'scale(0.95)';
+            });
+             btn.addEventListener('mouseup', function() {
+                this.style.transform = 'scale(1)';
+            });
+             btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
